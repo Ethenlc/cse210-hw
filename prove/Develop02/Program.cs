@@ -4,32 +4,67 @@ class Program
 {
     static void Main(string[] args)
     {
+        Journal theJournal = new Journal();
+        int userInput = 0;
+
         Console.WriteLine("Welcome to the Journal Program!");
-        Console.WriteLine("Please select one of the following choices:");
-        Console.WriteLine("1. Write");
-        Console.WriteLine("2. Display");
-        Console.WriteLine("3. Load");
-        Console.WriteLine("4. Save");
-        Console.WriteLine("5. Quit");
-        Console.WriteLine("What would you like to do?");
 
-        if (int.TryParse(Console.ReadLine(), out int userInput))
+        do
         {
-            if (userInput == 1)
+            Console.WriteLine("Please select one of the following choices:");
+            Console.WriteLine("1. Write");
+            Console.WriteLine("2. Display");
+            Console.WriteLine("3. Load");
+            Console.WriteLine("4. Save");
+            Console.WriteLine("5. Quit");
+            Console.Write("What would you like to do? - ");
+
+            if (int.TryParse(Console.ReadLine(), out userInput))
             {
-                PromptGenerator yourInstance = new PromptGenerator();
-                Console.WriteLine(yourInstance.GetRandomPrompt());
+                if (userInput == 1)
+                {
+                    PromptGenerator newInstance = new PromptGenerator();
+                    string prompt = newInstance.GetRandomPrompt();
+                    Console.WriteLine(prompt);
+                    DateTime currentDate = DateTime.Today;
+
+                    Console.Write("> ");
+                    string input = Console.ReadLine();
+
+                    Entry anEntry = new Entry
+                    {
+                        _date = currentDate.ToString("yyyy/MM/dd"),
+                        _promptText = prompt,
+                        _entryText = input
+                    };
+
+                    theJournal.AddEntry(anEntry);
+                }
+
+                else if (userInput == 2)
+                {
+                    theJournal.DisplayAll();
+                }
+
+                else if (userInput == 3)
+                {
+                    Console.WriteLine("Enter the file name to load: ");
+                    string fileName = Console.ReadLine();
+                    theJournal.LoadFromFile(fileName);
+                }
+
+                else if (userInput == 4)
+                {
+                    Console.WriteLine("Enter the file name to save: ");
+                    string fileName = Console.ReadLine();
+                    theJournal.SaveToFile(fileName);
+                }
             }
 
-            else if (userInput == 4)
+            else if (userInput > 5)
             {
-                Entry newEntry = new Entry();
-                newEntry._prompts = 
+                Console.WriteLine("Invalid input. Please enter a valid number.");
             }
-        }
-        else
-        {
-            Console.WriteLine("Invalid input. Please enter a valid number.");
-        }
+        } while (userInput != 5);
     }
 }
